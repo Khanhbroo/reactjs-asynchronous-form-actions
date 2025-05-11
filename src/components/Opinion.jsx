@@ -3,7 +3,9 @@ export function Opinion({ opinion: { id, title, body, userName, votes } }) {
     <article>
       <header>
         <h3>{title}</h3>
-        <p>Shared by {userName}</p>
+        <p>
+          Shared by <b>{userName}</b>
+        </p>
       </header>
       <p>{body}</p>
       <form className="votes">
