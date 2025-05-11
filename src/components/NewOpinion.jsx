@@ -1,28 +1,34 @@
-import { useActionState } from "react";
+import { useActionState, use } from "react";
 
-const shareOpinionAction = (prevFormState, formData) => {
-  const userData = Object.fromEntries(formData.entries());
-
-  const errors = [];
-
-  if (userData.userName === "") {
-    errors.push("Please provide your name.");
-  }
-  if (userData.title.trim().length < 5) {
-    errors.push("Title must be at least 5 characters long.");
-  }
-  if (userData.body.trim().length < 10 || userData.body.trim().length > 300) {
-    errors.push("Opinion must be between 10 and 300 characters long.");
-  }
-
-  if (errors.length > 0) {
-    return { errors, enteredValue: userData };
-  }
-
-  return { errors: null };
-};
+import { OpinionsContext } from "../store/opinions-context";
 
 export function NewOpinion() {
+  const { addOpinion } = use(OpinionsContext);
+
+  const shareOpinionAction = async (prevFormState, formData) => {
+    const userData = Object.fromEntries(formData.entries());
+
+    const errors = [];
+
+    if (userData.userName === "") {
+      errors.push("Please provide your name.");
+    }
+    if (userData.title.trim().length < 5) {
+      errors.push("Title must be at least 5 characters long.");
+    }
+    if (userData.body.trim().length < 10 || userData.body.trim().length > 300) {
+      errors.push("Opinion must be between 10 and 300 characters long.");
+    }
+
+    if (errors.length > 0) {
+      return { errors, enteredValue: userData };
+    }
+
+    await addOpinion(userData);
+
+    return { errors: null };
+  };
+
   const [formState, formAction] = useActionState(shareOpinionAction, {
     errors: null,
   });
